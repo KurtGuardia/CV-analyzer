@@ -40,12 +40,7 @@ export default function upload() {
       )
 
     setStatusText('Converting to image...')
-    console.log('🚀 ~ handleAnalyze ~ file:', file)
     const imageFile = await convertPdfToImage(file)
-    console.log(
-      '🚀 ~ handleAnalyze ~ imageFile:',
-      imageFile,
-    )
     if (!imageFile.file)
       return setStatusText(
         'Error: Failed to convert PDF to image',
@@ -88,7 +83,8 @@ export default function upload() {
     data.feedback = JSON.parse(feedbackText)
     await kv.set(`resume$${uuid}`, JSON.stringify(data))
     setStatusText('Analysis complete, redirecting')
-    console.log(data)
+
+    naviagte(`/resume/${uuid}`)
   }
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
