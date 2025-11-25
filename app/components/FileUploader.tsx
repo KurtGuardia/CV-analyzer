@@ -4,18 +4,23 @@ import { formatSize } from '../lib/utils'
 
 interface FileUploaderProps {
   onFileSelect?: (file: File | null) => void
+  file: File | null
 }
 
-export default function FileUploader({
+const FileUploader = ({
   onFileSelect,
-}: FileUploaderProps) {
+  file,
+}: FileUploaderProps) => {
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
       const file = acceptedFiles[0] || null
+
       onFileSelect?.(file)
     },
     [onFileSelect],
   )
+
+  const maxFileSize = 20 * 1024 * 1024 // 20MB in bytes
 
   const {
     getRootProps,
@@ -26,14 +31,14 @@ export default function FileUploader({
     onDrop,
     multiple: false,
     accept: { 'application/pdf': ['.pdf'] },
-    maxSize: 20 * 1024 * 1024,
+    maxSize: maxFileSize,
   })
-
-  const file = acceptedFiles[0] || null
 
   return (
     <div className='w-full gradient-border'>
       <div {...getRootProps()}>
+        <input {...getInputProps()} />
+
         <div className='space-y-4 cursor-pointer'>
           {file ? (
             <div
@@ -47,7 +52,7 @@ export default function FileUploader({
               />
               <div className='flex items-center space-x-3'>
                 <div>
-                  <p className='text-sm text-gray-700 font-medium truncate max-w-xs'>
+                  <p className='text-sm font-medium text-gray-700 truncate max-w-xs'>
                     {file.name}
                   </p>
                   <p className='text-sm text-gray-500'>
@@ -70,8 +75,7 @@ export default function FileUploader({
             </div>
           ) : (
             <div>
-              {' '}
-              <div className='mx-auto mb-2 w-16 h-16 flex items-center justify-center'>
+              <div className='mx-auto w-16 h-16 flex items-center justify-center mb-2'>
                 <img
                   src='/icons/info.svg'
                   alt='upload'
@@ -80,12 +84,12 @@ export default function FileUploader({
               </div>
               <p className='text-lg text-gray-500'>
                 <span className='font-semibold'>
-                  click to upload
+                  Click to upload
                 </span>{' '}
-                or drag and drop it like it's hot
+                or drag and drop
               </p>
               <p className='text-lg text-gray-500'>
-                PDF (max 20 MB)
+                PDF (max {formatSize(maxFileSize)})
               </p>
             </div>
           )}
@@ -94,3 +98,4 @@ export default function FileUploader({
     </div>
   )
 }
+export default FileUploader

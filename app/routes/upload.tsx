@@ -87,6 +87,7 @@ export default function upload() {
                 </label>
                 <FileUploader
                   onFileSelect={handleFileSelect}
+                  file={file}
                 />
               </div>
               <button
