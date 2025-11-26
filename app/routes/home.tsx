@@ -38,10 +38,6 @@ export default function Home() {
       const parsedResumes = resumes?.map(
         (resume) => JSON.parse(resume.value) as Resume,
       )
-      console.log(
-        '🚀 ~ loadResumes ~ parsedResumes:',
-        parsedResumes,
-      )
 
       setResumes(parsedResumes || [])
       setLoadingResumes(false)
@@ -94,6 +90,17 @@ export default function Home() {
               className='primary-button w-fit text-xl font-semibold'
             >
               Upload Resume
+            </Link>
+          </div>
+        )}
+
+        {!loadingResumes && resumes.length > 0 && (
+          <div className='flex flex-col items-center justify-center mt-10 gap-4'>
+            <Link
+              to='/wipe'
+              className='bg-red-800 text-white px-3 py-2 rounded-md cursor-pointer w-fit text-sm font-medium'
+            >
+              Wipe all Data
             </Link>
           </div>
         )}
