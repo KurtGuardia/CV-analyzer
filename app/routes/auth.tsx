@@ -18,7 +18,19 @@ export default function auth() {
   }, [auth.isAuthenticated, next])
 
   return (
-    <main className="bg-[url('images/bg-main.svg')] bg-cover min-h-screen flex items-center justify-center">
+    <main className="bg-[url('images/bg-main.svg')] bg-cover min-h-screen flex flex-col gap-18 items-center">
+      <div className='flex flex-col gap-4 bg-white rounded-2xl p-10 mx-8'>
+        <h2>
+          You need a Puter account to use Resumind's AI
+          features - don't worry it won't even ask your
+          credit card :)
+        </h2>
+        <h3>
+          If the Verify popup won't close automatically,
+          manually do it and press Continue again on the
+          Puter popup and create a free account
+        </h3>
+      </div>
       <div className='gradient-border-shadow-lg'>
         <section className='flex flex-col gap-8 bg-white rounded-2xl p-10'>
           <div className='flex flex-col items-center gap-2 text-center'>

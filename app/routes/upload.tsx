@@ -64,16 +64,60 @@ export default function upload() {
     }
     await kv.set(`resume:${uuid}`, JSON.stringify(data))
 
-    setStatusText(`${(<b>"Analyzing..."</b>)}`)
+    setStatusText('Analyzing...')
 
-    const feedback = await ai.feedback(
+    console.log(
+      'Calling ai.feedback with path:',
       uploadedFile.path,
-      prepareInstructions({ jobTitle, jobDescription }),
     )
+    let feedback
+    try {
+      feedback = await ai.feedback(
+        uploadedFile.path,
+        prepareInstructions({ jobTitle, jobDescription }),
+      )
+      console.log('Feedback response:', feedback)
+    } catch (error) {
+      console.error('Error in ai.feedback:', error)
+      if ((error as any).success === false) {
+        const errorMsg =
+          (error as any).error?.message || 'API error'
+        if (
+          errorMsg.includes('credit balance') ||
+          errorMsg.includes('too low')
+        ) {
+          return setStatusText(
+            'Error: Low or no credits to use AI features. Please upgrade your plan.',
+          )
+        }
+        return setStatusText(`Error: ${errorMsg}`)
+      }
+      return setStatusText(
+        'Error: Failed to analyze resume',
+      )
+    }
     if (!feedback)
       return setStatusText(
         'Error: Failed to analyze resume',
       )
+
+    if ((feedback as any).success === false) {
+      console.error(
+        'Feedback error:',
+        (feedback as any).error,
+      )
+      const errorMsg =
+        (feedback as any).error?.message || 'API error'
+      if (
+        errorMsg.includes('credit balance') ||
+        errorMsg.includes('too low')
+      ) {
+        return setStatusText(
+          'Error: Low or no credits to use AI features. Please upgrade your plan.',
+        )
+      }
+      return setStatusText(`Error: ${errorMsg}`)
+    }
 
     const feedbackText =
       typeof feedback.message.content === 'string'
