@@ -64,7 +64,7 @@ export default function upload() {
     }
     await kv.set(`resume:${uuid}`, JSON.stringify(data))
 
-    setStatusText('Analyzing')
+    setStatusText(`${(<b>"Analyzing..."</b>)}`)
 
     const feedback = await ai.feedback(
       uploadedFile.path,
